@@ -50,12 +50,16 @@ class SemanticLabEmailingMailer {
 		$ns = $article->getTitle()->getNamespace();
 
 		// we get parameters from user
-		self::$user_verbose = self::getUserParam( "Has_Verbose_Mailing", $user );
+		global $wgSemanticLabEmailingVerboseProp;
+		self::$user_verbose = self::getUserParam( $wgSemanticLabEmailingVerboseProp, $user );
 		
 		if ($wgCanonicalNamespaceNames[$ns] == 'Request' ) {
 
 			// Status of the request
-			$status = self::getStatus( 'PR_Request_Status', $title_text, $user );
+			global $wgSemanticLabEmailingPropsCheck;
+
+			// We assume only one prop for Request
+			$status = self::getStatus( $wgSemanticLabEmailingPropsCheck['Request'][0], $title_text, $user );
 			$week = self::getStatus( 'PR_Request_WeekExtension', $title_text, $user );
 			
 			if ( count( $status ) > 0 ) {
@@ -72,7 +76,8 @@ class SemanticLabEmailingMailer {
 			
 
 			// Assigned to
-			$assignees = self::getAssignees( 'PR_Request_AssignedTo', $title_text, $user );
+			global $wgSemanticLabEmailingAssignedProp;
+			$assignees = self::getAssignees( $wgSemanticLabEmailingAssignedProp['Request'], $title_text, $user );
 
 			if ( count( $assignees ) > 0 ) {
 					self::$request_assignees = $assignees;
@@ -87,7 +92,7 @@ class SemanticLabEmailingMailer {
 			global $wgSemanticLabEmailingPropsCheck;
 			
 			// We get all props
-			foreach ( $wgSemanticLabEmailingPropsCheck as $prop2Check ) {
+			foreach ( $wgSemanticLabEmailingPropsCheck['Experiment'] as $prop2Check ) {
 			
 				$prop2Check = str_replace( " ", "_", $prop2Check );
 				// Status of the request
@@ -185,7 +190,8 @@ class SemanticLabEmailingMailer {
 		$title_text = $title->getPrefixedText();
 		self::printDebug( "Title text: $title_text" );
 
-		$requesters = self::getAssignees( 'PR_Request_UserName', $title_text, $user );
+		global $wgSemanticLabEmailingOwnerProp;
+		$requesters = self::getAssignees( $wgSemanticLabEmailingOwnerProp['Request'], $title_text, $user );
 
 		// Get supermanager email addresses
 		$listusers = self::listUsersGroup("supermanager");
@@ -203,11 +209,13 @@ class SemanticLabEmailingMailer {
 		self::printDebug( "Title text: $title_text" );
 		
 		// Get associated request
-		$title_request = self::getAssignees( 'Request_Reference', $title_text, $user );
+		global $wgSemanticLabEmailingReferenceProp;
+		$title_request = self::getAssignees( $wgSemanticLabEmailingReferenceProp['Experiment'], $title_text, $user );
 		
 		// Get requesters
-	        // we expect only one request to match experiment -> array
-		$requesters = self::getAssignees( 'PR_Request_UserName', "Request:".$title_request[0], $user );
+	    // we expect only one request to match experiment -> array
+		global $wgSemanticLabEmailingOwnerProp;
+		$requesters = self::getAssignees( $wgSemanticLabEmailingOwnerProp['Request'], "Request:".$title_request[0], $user );
 		
 		self::mailNotification( $requesters, "New", $title, '', $status, "Request:".$title_request[0] );
 
@@ -227,11 +235,13 @@ class SemanticLabEmailingMailer {
 		$from_user = array();
 		array_push($from_user, $username);	
 
-		$requesters = self::getAssignees( 'PR_Request_UserName', $title_text, $user );
+		global $wgSemanticLabEmailingOwnerProp;
+		$requesters = self::getAssignees( $wgSemanticLabEmailingOwnerProp['Request'], $title_text, $user );
 		// We put current assignes
 		$text = $requesters[0];
 
-		$present_status = self::getStatus( 'PR_Request_Status', $title_text, $user );
+		global $wgSemanticLabEmailingPropsCheck;
+		$present_status = self::getStatus( $wgSemanticLabEmailingPropsCheck['Request'][0], $title_text, $user );
 
 		if ( $present_status[0] != self::$request_status ) {
 			
@@ -304,11 +314,13 @@ class SemanticLabEmailingMailer {
 		self::printDebug( "Title text: $title_text" );
 		
 		// Get associated request
-		$title_request = self::getAssignees( 'Request_Reference', $title_text, $user );
+		global $wgSemanticLabEmailingReferenceProp;
+		$title_request = self::getAssignees( $wgSemanticLabEmailingReferenceProp['Experiment'], $title_text, $user );
 	  
 		// Get requesters
 		// we expect only one request to match experiment -> array
-		$requesters = self::getAssignees( 'PR_Request_UserName', "Request:".$title_request[0], $user );
+		global $wgSemanticLabEmailingOwnerProp;
+		$requesters = self::getAssignees( $wgSemanticLabEmailingOwnerProp['Request'], "Request:".$title_request[0], $user );
 	  
 		// Time to get all properties
 		global $wgSemanticLabEmailingPropsCheck;
@@ -319,7 +331,7 @@ class SemanticLabEmailingMailer {
 		// We get all props
 		$iter = 0; // we use it for matching
 		
-		foreach ( $wgSemanticLabEmailingPropsCheck as $prop2Check ) {
+		foreach ( $wgSemanticLabEmailingPropsCheck['Experiment'] as $prop2Check ) {
 		
 			$prop2Check = str_replace( " ", "_", $prop2Check );
 			// Status of the request
@@ -328,7 +340,8 @@ class SemanticLabEmailingMailer {
 			if ( count( $propstatus ) > 0 ) {
 				if ( self::$experiment_status[$prop2Check] != $propstatus[0] ) {
 					
-					if ( $prop2Check == 'PR_Experiment_Status' ) {
+					// First more important
+					if ( $prop2Check ==  $wgSemanticLabEmailingPropsCheck['Experiment'][0] ) {
 						$status = CLOSED_EXPERIMENT;
 						self::mailNotification( $requesters, "", $title, "", $status, "Request:".$title_request[0] );
 						return true;

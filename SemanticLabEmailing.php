@@ -10,16 +10,9 @@ if ( !defined( 'SMW_VERSION' ) ) {
 	exit( 1 );
 }
 
-#
-# This is the path to your installation of SemanticLabEmailing as
-# seen from the web. Change it if required ($wgScriptPath is the
-# path to the base directory of your wiki). No final slash.
-# #
-$stScriptPath = $wgScriptPath . '/extensions/SemanticLabEmailing';
-#
 
 # Extension credits
-$wgExtensionCredits[defined( 'SEMANTIC_EXTENSION_TYPE' ) ? 'semantic' : 'other'][] = array(
+$GLOBALS['wgExtensionCredits'][defined( 'SEMANTIC_EXTENSION_TYPE' ) ? 'semantic' : 'other'][] = array(
 	'path' => __FILE__,
 	'name' => 'SemanticLabEmailing',
 	'author' => array(
@@ -33,19 +26,40 @@ $wgExtensionCredits[defined( 'SEMANTIC_EXTENSION_TYPE' ) ? 'semantic' : 'other']
 	'descriptionmsg' => 'semanticlabemailing-desc',
 );
 
-#$wgSemanticLabEmailingDebug = true;
-#$wgSemanticLabEmailingDefaultEmail = "no-reply@crg.es";
-#$wgSemanticLabEmailingDefaultName = "Proteomics Wiki";
-$wgSemanticLabEmailingUsersNoMail = array("WikiSysop");
-$wgSemanticLabEmailingPropsCheck = array("PR_Experiment_Status", "PR_Storage_Status", "PR_SH_DigestionType_Status", "PR_Quantitation_Status", "PR_OtherExp_Status", "PR_MW_Status", "PR_MRM_Status", "PR_LC_Status", "PR_Identification_Status", "PR_Exp_PTMenrichment_Status", "PR_Electrophoresis_Status", "PR_Depletion_Status", "PR_DataAnalysis_Status" );
-$wgSemanticLabEmailingPropsName =  array("Experiment", "Sample Storage", "Digestion", "Quantitation", "Other experiment", "Molecular Weight Determination", "MRM", "Liquid Chromatography", "Identification", "PTM", "Electrophoresis", "Depletion", "Data Analysis" );
+#$GLOBALS['wgSemanticLabEmailingDebug'] = true;
+#$GLOBALS['wgSemanticLabEmailingDefaultEmail'] = "no-reply@crg.es";
+#$GLOBALS['wgSemanticLabEmailingDefaultName'] = "Proteomics Wiki";
+$GLOBALS['wgSemanticLabEmailingUsersNoMail'] = array("WikiSysop");
+$GLOBALS['wgSemanticLabEmailingPropsCheck'] = array(
+	"Request" =>
+		array ( "PR_Request_Status" ),
+	"Experiment" =>
+		array( "PR_Experiment_Status", "PR_Storage_Status", "PR_SH_DigestionType_Status", "PR_Quantitation_Status", "PR_OtherExp_Status", "PR_MW_Status", "PR_MRM_Status", "PR_LC_Status", "PR_Identification_Status", "PR_Exp_PTMenrichment_Status", "PR_Electrophoresis_Status", "PR_Depletion_Status", "PR_DataAnalysis_Status" ) );
+
+$GLOBALS['wgSemanticLabEmailingPropsName'] =  array(
+	"Request" => array( "Status" ),
+	"Experiment" => array("Experiment", "Sample Storage", "Digestion", "Quantitation", "Other experiment", "Molecular Weight Determination", "MRM", "Liquid Chromatography", "Identification", "PTM", "Electrophoresis", "Depletion", "Data Analysis" ) );
+
+$GLOBALS['wgSemanticLabEmailingAssignedProp'] =  array(
+	"Request" => "PR_Request_AssignedTo"
+);
+$GLOBALS['wgSemanticLabEmailingOwnerProp'] =  array(
+	"Request" => "PR_Request_UserName"
+);
+
+$GLOBALS['wgSemanticLabEmailingReferenceProp'] =  array(
+	"Experiment" => "Request_Reference"
+);
+
+$GLOBALS['wgSemanticLabEmailingVerboseProp'] = "Has_Verbose_Mailing";
 
 // i18n
-$wgExtensionMessagesFiles['SemanticLabEmailing'] = dirname( __FILE__ ) . '/SemanticLabEmailing.i18n.php';
+$GLOBALS['wgMessagesDirs']['SemanticLabEmailing'] = __DIR__ . '/i18n';
+$GLOBALS['wgExtensionMessagesFiles']['SemanticLabEmailing'] = dirname( __FILE__ ) . '/SemanticLabEmailing.i18n.php';
 
 // Autoloading
-$wgAutoloadClasses['SemanticLabEmailingMailer'] = dirname( __FILE__ ) . '/SemanticLabEmailing.classes.php';
+$GLOBALS['wgAutoloadClasses']['SemanticLabEmailingMailer'] = dirname( __FILE__ ) . '/SemanticLabEmailing.classes.php';
 
 // Hooks
-$wgHooks['ArticleSaveComplete'][] = 'SemanticLabEmailingMailer::mailUpdatedTask';
-$wgHooks['ArticleSave'][] = 'SemanticLabEmailingMailer::findOldValues';
+$GLOBALS['wgHooks']['ArticleSaveComplete'][] = 'SemanticLabEmailingMailer::mailUpdatedTask';
+$GLOBALS['wgHooks']['ArticleSave'][] = 'SemanticLabEmailingMailer::findOldValues';
