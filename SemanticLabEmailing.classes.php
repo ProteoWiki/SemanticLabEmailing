@@ -127,7 +127,7 @@ class SemanticLabEmailingMailer {
 			if ( $wgCanonicalNamespaceNames[$ns] == 'Request' ) {
 		
 				if ( $status == NEW_REQUEST ) {
-				self::mailNewRequest( $article, $text, $current_user, $status );
+					self::mailNewRequest( $article, $text, $current_user, $status );
 				}
 				if ( $status == UPDATE ) {
 					self::mailEditRequest( $article, $text, $current_user, $status );
