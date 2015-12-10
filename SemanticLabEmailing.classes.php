@@ -56,10 +56,11 @@ class SemanticLabEmailingMailer {
 
 			// Status of the request
 			global $wgSemanticLabEmailingPropsCheck;
+			global $wgSemanticLabEmailingExtensionProp;
 
 			// We assume only one prop for Request
 			$status = self::getStatus( $wgSemanticLabEmailingPropsCheck['Request'][0], $title_text, $user );
-			$week = self::getStatus( 'PR_Request_WeekExtension', $title_text, $user );
+			$week = self::getStatus( $wgSemanticLabEmailingExtensionProp, $title_text, $user );
 			
 			if ( count( $status ) > 0 ) {
 				self::$request_status = $status[0];
@@ -248,7 +249,8 @@ class SemanticLabEmailingMailer {
 				$status = ACCEPTED;
 
 				// Let's check Extension time
-				$week = self::getStatus( 'PR_Request_ExpDelTime', $title_text, $user );
+				global $wgSemanticLabEmailingDeliveryTimeProp;
+				$week = self::getStatus( $wgSemanticLabEmailingDeliveryTimeProp, $title_text, $user );
 
 				$extra = $week[0];
 				
@@ -262,8 +264,10 @@ class SemanticLabEmailingMailer {
 
 			elseif ( $present_status[0] == 'Closed' ) {
 				$status = CLOSED;
+
+				global $wgSemanticLabEmailingClosureProp;
 				$creation_date = self::getStatus( '_CDAT', $title_text, $user );
-				$closure_date = self::getStatus( 'Closure_date', $title_text, $user );
+				$closure_date = self::getStatus( $wgSemanticLabEmailingClosureProp, $title_text, $user );
 	
 				$extra = $creation_date[0]."@".$closure_date[0];
 

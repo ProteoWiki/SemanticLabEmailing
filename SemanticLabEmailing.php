@@ -27,8 +27,8 @@ $GLOBALS['wgExtensionCredits'][defined( 'SEMANTIC_EXTENSION_TYPE' ) ? 'semantic'
 );
 
 #$GLOBALS['wgSemanticLabEmailingDebug'] = true;
-#$GLOBALS['wgSemanticLabEmailingDefaultEmail'] = "no-reply@crg.es";
-#$GLOBALS['wgSemanticLabEmailingDefaultName'] = "Proteomics Wiki";
+$GLOBALS['wgSemanticLabEmailingDefaultEmail'] = "no-reply@crg.es";
+$GLOBALS['wgSemanticLabEmailingDefaultName'] = "Proteomics Wiki";
 $GLOBALS['wgSemanticLabEmailingUsersNoMail'] = array("WikiSysop");
 $GLOBALS['wgSemanticLabEmailingPropsCheck'] = array(
 	"Request" =>
@@ -52,6 +52,10 @@ $GLOBALS['wgSemanticLabEmailingReferenceProp'] =  array(
 );
 
 $GLOBALS['wgSemanticLabEmailingVerboseProp'] = "Has_Verbose_Mailing";
+$GLOBALS['wgSemanticLabEmailingExtensionProp'] = "PR_Request_WeekExtension";
+$GLOBALS['wgSemanticLabEmailingDeliveryTimeProp'] = "PR_Request_ExpDelTime";
+
+$GLOBALS['wgSemanticLabEmailingClosureProp'] = "Closure_date";
 
 // i18n
 $GLOBALS['wgMessagesDirs']['SemanticLabEmailing'] = __DIR__ . '/i18n';
