@@ -64,7 +64,11 @@ $GLOBALS['wgExtensionMessagesFiles']['SemanticLabEmailing'] = dirname( __FILE__ 
 // Autoloading
 $GLOBALS['wgAutoloadClasses']['SemanticLabEmailingMailer'] = dirname( __FILE__ ) . '/SemanticLabEmailing.classes.php';
 $GLOBALS['wgAutoloadClasses']['SemanticLabEmailingPageCreator'] = dirname( __FILE__ ) . '/SemanticLabEmailing.pagecreator.classes.php';
+$GLOBALS['wgAutoloadClasses']['ApiSemanticLabEmailingSatisfaction'] = __DIR__ . '/SemanticLabEmailing.api.php';
+
 
 // Hooks
 $GLOBALS['wgHooks']['ArticleSaveComplete'][] = 'SemanticLabEmailingMailer::mailUpdatedTask';
 $GLOBALS['wgHooks']['ArticleSave'][] = 'SemanticLabEmailingMailer::findOldValues';
+
+$GLOBALS['wgAPIModules']['semanticlabemailing'] = 'ApiSemanticLabEmailing';
