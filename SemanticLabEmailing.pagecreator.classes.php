@@ -36,7 +36,7 @@ class SemanticLabEmailingPageCreator {
 		$article = new Article( Title::newFromText( $pagename ) );
 
 		$content = \ContentHandler::makeContent(
-				$titleText,
+				$finalText,
 				$article->getTitle(),
 				CONTENT_MODEL_WIKITEXT
 		);
