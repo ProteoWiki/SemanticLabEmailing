@@ -25,7 +25,7 @@ class SemanticLabEmailingPageCreator {
 		$templateArticle = Article::newFromId($templateID); //Make an article object from that id
 		$templateText = $templateArticle->getRawText();
 
-		if (empty($templateText)) {
+		if ( empty($templateText) || empty($titleText) ) {
 			return false;
 		}
 
@@ -33,7 +33,7 @@ class SemanticLabEmailingPageCreator {
 		$finalText = self::subsText( $templateText, $titleText );
 
 		// Create page. Since only one, let's do straight
-		$article = new Article( $pagename );
+		$article = new Article( Title::newFromText( $pagename ) );
 
 		$content = \ContentHandler::makeContent(
 				$titleText,
