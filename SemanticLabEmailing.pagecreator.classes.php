@@ -12,7 +12,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 class SemanticLabEmailingPageCreator {
 
 
-	public static function create( $titleText, $template, $prefix ) {
+	public static function actOnPage( $titleText, $template, $prefix, $method, $values ) {
 
 		// Template page
 		$templatePage = "MediaWiki:SemanticLabEmailing-$template";
@@ -29,8 +29,31 @@ class SemanticLabEmailingPageCreator {
 			return false;
 		}
 
+		// Check if null de target pagename, otherwise stop
+
+
 		// Substitute
-		$finalText = self::subsText( $templateText, $titleText );
+		if ( $method = 'create' ){
+			$values = -1;
+
+			// If null target pagename OK
+
+		} else {
+
+			// If null target pagename -> STOP
+
+			// First check user -> associated
+	
+			// Get revisions
+			$revs = self::getallRevs( $templateID );
+	
+			// Count revs
+	
+			// If num revs is lower than proceed
+
+		}
+
+		$finalText = self::subsText( $templateText, $titleText, $values );
 
 		// Create page. Since only one, let's do straight
 		$article = new Article( Title::newFromText( $pagename ) );
@@ -48,10 +71,19 @@ class SemanticLabEmailingPageCreator {
 
 	}
 
-	private static function subsText( $templateText, $titleText ) {
+	private static function subsText( $templateText, $titleText, $values = "-1" ) {
 
 		// Only one variable
 		$templateEnd = str_replace( "#1", $titleText, $templateText );
+
+		// TODO: Allow diferent separators
+		$listValues = split( "-", $values );
+		$iter = 1;
+		foreach( $values as $value ) {
+			$iter++;
+			$subsVar = "#" + $iter;
+			$templateEnd = str_replace( $subsVar, $value, $templateText );
+		}
 
 		$templateEnd = str_replace("??", "{{", $templateEnd);
 		$templateEnd = str_replace("!!", "}}", $templateEnd);
@@ -60,5 +92,8 @@ class SemanticLabEmailingPageCreator {
 
 	}
 
+	private static function getallRevs( $pageid ) {
+
+	}
 
 }
