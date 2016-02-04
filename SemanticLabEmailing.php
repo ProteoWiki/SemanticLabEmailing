@@ -59,10 +59,12 @@ $GLOBALS['wgSemanticLabEmailingClosureProp'] = "Closure_date";
 
 
 $GLOBALS['wgSemanticLabEmailingCreatePage'] = array(
-		"prefix" => "Satisfaction",
-		"template" => "MediaWiki:SemanticLabEmailing-Satisfaction",
-		"maxrevs" => 2,
-		"time" => 1296000 //Seconds to allow editing
+		"Satisfaction" => array(
+			"prefix" => "Satisfaction",
+			"template" => "MediaWiki:SemanticLabEmailing-Satisfaction",
+			"maxrevs" => 2,
+			"time" => 1296000 //Seconds to allow editing
+		)
 );
 
 // i18n
