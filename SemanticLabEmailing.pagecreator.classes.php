@@ -57,7 +57,7 @@ class SemanticLabEmailingPageCreator {
 				return 'Page does not exist'; // Pagename does not exist -> abort
 			}
 
-			// First check user -> associated
+			// TODO: First check user -> associated
 	
 			// Get revisions
 			$revs = self::getallRevs( $templateID );
@@ -70,7 +70,14 @@ class SemanticLabEmailingPageCreator {
 				return( "No more changes allowed" );
 			}
 
-			// TODO: If last rev is too old, block
+			// If last rev is too old, block
+			$lastRevDate = $revs[0]["r.rev_timestamp"];
+			$currentDate = date('YmdHis');
+
+			if ( $currentDate > ( $lastRevDate + $wgSemanticLabEmailingCreatePage[$emailing]["time"] ) ) {
+				return( "Too old rev" );
+			}
+			
 		}
 
 		$finalText = self::subsText( $templateText, $titleText, $values );
@@ -114,6 +121,61 @@ class SemanticLabEmailingPageCreator {
 
 	private static function getallRevs( $pageid ) {
 
+		$db = wfGetDB( DB_SLAVE );
+		$columns = array();
+		$condoptions = array();
+
+		array_push( $columns, 'r.rev_id' );
+		array_push( $columns, 'r.rev_timestamp' );
+
+		$from = array( 'r' => 'revision', 'p' => 'page' );
+
+		$where = array( 'r.rev_page = p.page_id' );
+
+		array_push( $where, "p.page_id = ".$pageid);
+
+		$options['ORDER BY'] = 'r.rev_timestamp DESC';
+		$options['DISTINCT'] = true;
+
+		$revs = self::searchDB( $db, $from, $columns, $where, $options, $condoptions );
+
+		return $revs;
+	}
+
+
+    private static function searchDB( $db, $table, $vars, $conds, $options, $condoptions=array(), $count ) {
+		
+		$result = $db->select( $table, $vars, $conds, 'SemanticLabEmailingPageCreator::searchDB', $options, $condoptions );
+		if ( !$result ) {
+			// echo ( wfMsgExt( "listchanges-db-invalid-query", array( 'parse', 'escape' ) ) );
+			return false;
+		} else {
+			$rows = array();
+			while ( $row = $db->fetchRow( $result ) ) {
+				// Create a new row object, that uses the
+				// passed-in column names as keys, so that
+				// there's always an exact match between
+				// what's in the query and what's in the
+				// return value (so that "a.b", for instance,
+				// doesn't get chopped off to just "b").
+				$new_row = array();
+				foreach ( $vars as $i => $column_name ) {
+					// Convert the encoding to UTF-8
+					// if necessary - based on code at
+					// http://www.php.net/manual/en/function.mb-detect-encoding.php#102510
+					$dbField = $row[$i];
+					if ( !function_exists( 'mb_detect_encoding' ) ||
+						mb_detect_encoding( $dbField, 'UTF-8', true ) == 'UTF-8' ) {
+							$new_row[$column_name] = $dbField;
+						} else {
+							$new_row[$column_name] = utf8_encode( $dbField );
+						}
+				}
+				$rows[] = $new_row;
+			}
+			
+			return $rows;
+		}
 	}
 
 }
