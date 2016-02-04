@@ -12,7 +12,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 class SemanticLabEmailingPageCreator {
 
 
-	public static function actOnPage( $emailing, $titleText, $method, $values ) {
+	public static function actOnPage( $emailing, $titleText, $method, $values="-1" ) {
 
 		global $wgSemanticLabEmailingCreatePage;
 
@@ -45,7 +45,7 @@ class SemanticLabEmailingPageCreator {
 
 		// Substitute
 		if ( $method = 'create' ){
-			$values = -1;
+			$values = "-1";
 
 			if ( $pagenameWiki->exists() ) {
 				return 'Page already exists'; // Pagename exists -> abort

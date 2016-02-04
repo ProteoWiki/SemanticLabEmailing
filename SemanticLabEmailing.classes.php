@@ -272,7 +272,7 @@ class SemanticLabEmailingMailer {
 				$extra = $creation_date[0]."@".$closure_date[0];
 
 				// Trigger page creation
-				$createdPage = SemanticLabEmailingPageCreator::create( $title_text, 'Satisfaction', 'Satisfaction' );
+				$createdPage = SemanticLabEmailingPageCreator::actOnPage( "Satisfaction", $title_text, "create", "-1" );
 
 				self::mailNotification( $requesters, $text, $title, $from_user, $status, $extra );
 			}
