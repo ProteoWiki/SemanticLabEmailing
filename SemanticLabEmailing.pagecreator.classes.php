@@ -12,13 +12,22 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 class SemanticLabEmailingPageCreator {
 
 
-	public static function actOnPage( $titleText, $template, $prefix, $method, $values ) {
+	public static function actOnPage( $emailing, $titleText, $method, $values ) {
+
+		global $wgSemanticLabEmailingCreatePage;
+
+		if ( ! array_key_exists( $emailing, $wgSemanticLabEmailingCreatePage ) ) {
+			return null;
+		}
 
 		// Template page
-		$templatePage = "MediaWiki:SemanticLabEmailing-$template";
+		$templatePage = $wgSemanticLabEmailingCreatePage[$emailing]["template"];
 
 		//Final page
-		$pagename = $prefix.":".$titleText;
+		$pagename = $wgSemanticLabEmailingCreatePage[$emailing]["prefix"].":".$titleText;
+
+		$maxrevs = $wgSemanticLabEmailingCreatePage[$emailing]["maxrevs"];
+
 
 		// Read template page
 		$templateID = Title::newFromText($templatePage)->getArticleID(); //Get the id for the article called Test_page
@@ -30,17 +39,23 @@ class SemanticLabEmailingPageCreator {
 		}
 
 		// Check if null de target pagename, otherwise stop
-
+		$pagenameTitle = Title::newFromText( $pagename );
+		$pagenameWiki = WikiPage::factory( $pagenameTitle );
+		
 
 		// Substitute
 		if ( $method = 'create' ){
 			$values = -1;
 
-			// If null target pagename OK
+			if ( $pagenameWiki->exists() ) {
+				return 'Page already exists'; // Pagename exists -> abort
+			}
 
 		} else {
 
-			// If null target pagename -> STOP
+			if ( ! $pagenameWiki->exists() ) {
+				return 'Page does not exist'; // Pagename does not exist -> abort
+			}
 
 			// First check user -> associated
 	
@@ -48,9 +63,14 @@ class SemanticLabEmailingPageCreator {
 			$revs = self::getallRevs( $templateID );
 	
 			// Count revs
+			$numrevs = sizeof( $revs );
 	
 			// If num revs is lower than proceed
+			if ( $numrevs > $maxrevs ) {
+				return( "No more changes allowed" );
+			}
 
+			// TODO: If last rev is too old, block
 		}
 
 		$finalText = self::subsText( $templateText, $titleText, $values );

@@ -57,6 +57,14 @@ $GLOBALS['wgSemanticLabEmailingDeliveryTimeProp'] = "PR_Request_ExpDelTime";
 
 $GLOBALS['wgSemanticLabEmailingClosureProp'] = "Closure_date";
 
+
+$GLOBALS['wgSemanticLabEmailingCreatePage'] = array(
+		"prefix" => "Satisfaction",
+		"template" => "MediaWiki:SemanticLabEmailing-Satisfaction",
+		"maxrevs" => 2,
+		"time" => 1296000 //Seconds to allow editing
+);
+
 // i18n
 $GLOBALS['wgMessagesDirs']['SemanticLabEmailing'] = __DIR__ . '/i18n';
 $GLOBALS['wgExtensionMessagesFiles']['SemanticLabEmailing'] = dirname( __FILE__ ) . '/SemanticLabEmailing.i18n.php';
@@ -72,3 +80,5 @@ $GLOBALS['wgHooks']['ArticleSaveComplete'][] = 'SemanticLabEmailingMailer::mailU
 $GLOBALS['wgHooks']['ArticleSave'][] = 'SemanticLabEmailingMailer::findOldValues';
 
 $GLOBALS['wgAPIModules']['semanticlabemailing'] = 'ApiSemanticLabEmailing';
+
+

@@ -4,9 +4,16 @@ class SemanticLabEmailing extends ApiBase {
 
 	public function execute() {
 		$params = $this->extractRequestParams();
-		// TODO: Process params here
 
-		$pagename = SemanticLabEmailingPageCreator::actOnPage();
+		$emailing = $params['emailing'];
+		$target = $params['target'];
+		$method = $params['method'];
+		$values = $params['values'];
+
+		$output = SemanticLabEmailingPageCreator::actOnPage( $emailing, $target, $method, $values );
+
+		$this->getResult()->addValue( null, $this->getModuleName(), array ( 'status' => $output ) );
+
 		return true;
 	}
 
