@@ -83,4 +83,11 @@ $GLOBALS['wgHooks']['ArticleSave'][] = 'SemanticLabEmailingMailer::findOldValues
 
 $GLOBALS['wgAPIModules']['semanticlabemailing'] = 'ApiSemanticLabEmailing';
 
+// Special Page
+$GLOBALS['wgAutoloadClasses']['SpecialSemanticLabEmailingFeedback'] =  dirname( __FILE__ ) . '/SemanticLabEmailing.special.php';
+
+# SpecialPage referencing
+$GLOBALS['wgSpecialPages']['SemanticLabEmailingFeedback'] = 'SpecialSemanticLabEmailingFeedback';
+# SpecialPage category
+$GLOBALS['wgSpecialPageGroups']['SemanticLabEmailingFeedback'] = 'other';
 
