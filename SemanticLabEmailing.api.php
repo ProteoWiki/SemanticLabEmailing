@@ -1,6 +1,6 @@
 <?php
 
-class SemanticLabEmailing extends ApiBase {
+class ApiSemanticLabEmailing extends ApiBase {
 
 	public function execute() {
 		$params = $this->extractRequestParams();

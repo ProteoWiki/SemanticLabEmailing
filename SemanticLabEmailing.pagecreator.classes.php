@@ -44,7 +44,7 @@ class SemanticLabEmailingPageCreator {
 		
 
 		// Substitute
-		if ( $method = 'create' ){
+		if ( $method == 'create' ){
 			$values = "-1";
 
 			if ( $pagenameWiki->exists() ) {
@@ -104,11 +104,11 @@ class SemanticLabEmailingPageCreator {
 		$templateEnd = str_replace( "#1", $titleText, $templateText );
 
 		// TODO: Allow diferent separators
-		$listValues = split( "-", $values );
+		$listValues = explode( "*", $values );
 		$iter = 1;
-		foreach( $values as $value ) {
+		foreach( $listValues as $value ) {
 			$iter++;
-			$subsVar = "#" + $iter;
+			$subsVar = "#".$iter;
 			$templateEnd = str_replace( $subsVar, $value, $templateText );
 		}
 
