@@ -63,7 +63,10 @@ $GLOBALS['wgSemanticLabEmailingCreatePage'] = array(
 			"prefix" => "Satisfaction",
 			"template" => "MediaWiki:SemanticLabEmailing-Satisfaction",
 			"maxrevs" => 2,
-			"time" => 1296000 //Seconds to allow editing
+			"time" => 1296000, //Seconds to allow editing
+			"options" => array(
+				array( "name" => "General", "label" => array("Bad", "Good"), "value" => array(0, 1), "default" => "Good" )
+			)
 		)
 );
 

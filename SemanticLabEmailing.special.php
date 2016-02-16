@@ -11,26 +11,64 @@ class SpecialSemanticLabEmailingFeedback extends SpecialPage {
 
 	public function execute($par) {
 
-		global $wgOut;
+		$output = $this->getOutput();
 		global $wgSemanticLabEmailingCreatePage;
 
 		$this->setHeaders();
 
-		// Get this info from 
-		$formDescriptorUpload = array();
+		$request = $this->getRequest();
 
-		$htmlForm = new HTMLForm( $formDescriptorUpload, 'semanticlabemailing_form' );
+		$output->addHTML( "<div class='semanticlabemailing_section'>" );
 
-		$htmlForm->setSubmitText( 'Send' ); //TODO: Change button label
+		if ( $request->getCheck("emailing") && $request->getCheck("target") ) {
+			// Let's start talking
+			$emailing = $request->getVal("emailing");
+			$target = $request->getVal("target");
 
-		/* We set a callback function */
-		$htmlForm->setSubmitCallback( array( 'SpecialSemanticLabEmailingFeedback', 'processInput' ) );  # Call processInput() in SpecialBioParser on submit
+			if ( $request->getCheck("values") ) {
+				// We get values
+				$values = $request->getVal("values");
+				// API process
+			} else {
+				if ( array_key_exists( $emailing, $wgSemanticLabEmailingCreatePage ) ) {
+					if ( array_key_exists( "options", $wgSemanticLabEmailingCreatePage[$emailing] ) ) {
+						$options = $wgSemanticLabEmailingCreatePage[$emailing]["options"];
 
-		$htmlForm->suppressReset(false); # Get back reset button
+						foreach ( $options as $option ) {
+							$name = $option["name"];
 
-		$wgOut->addHTML( "<div class='semanticlabemailing_section'>" );
-		$htmlForm->show(); # Displaying the form
-		$wgOut->addHTML( "</div>" );
+							$default = $option["default"];
+							$value = $option["value"];
+							
+							if ( is_array($value) ) {
+
+								$label = array();
+
+								if ( array_key_exists( "label", $option ) ) {
+									$label = $option["label"];
+									if ( is_array( $label ) && ( count( $option["label"] ) == count( $option["value"] ) ) ) {
+										// Do nothing
+									} else {
+										$label = array();
+									}
+								}
+								
+								foreach ( $value as $valuee ) {
+									
+
+								}
+							}
+						}
+
+					}
+				}
+
+			}
+		}
+
+		$output->addHTML( "</div>" );
+
+		return true;
 
 	}
 

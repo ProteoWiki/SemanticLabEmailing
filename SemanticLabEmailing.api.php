@@ -45,6 +45,7 @@ class ApiSemanticLabEmailing extends ApiBase {
 	public function getParamDescription() {
 		return array(
 			'emailing' => 'Type of emailing',
+			'method' => 'Process involved',
 			'target' => 'Affected page',
 			'values' => 'Given values'
 		);
