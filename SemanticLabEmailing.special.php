@@ -4,6 +4,11 @@ if (!defined('MEDIAWIKI')) { die(-1); }
 
 class SpecialSemanticLabEmailingFeedback extends SpecialPage {
 
+	public function __construct($request = null) {
+		parent::__construct('SemanticLabEmailingFeedback');   #The first argument must be the name of your special page
+
+	}
+
 	public function execute($par) {
 
 		global $wgOut;
