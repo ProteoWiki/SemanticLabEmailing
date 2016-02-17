@@ -69,14 +69,20 @@ class SpecialSemanticLabEmailingFeedback extends SpecialPage {
 								foreach ( $value as $valuee ) {
 
 									$labelstr = null;
-									if ( defined( $label[$v] ) ) {
+									if ( array_key_exists( $v, $label ) ) {
 										$labelstr = $label[$v];
 									}
 
+									$defaultstr = "";
+
+									if ( $valuee == $default ) {
+										$defaultstr = " selected=selected";
+									}
+
 									if ( $labelstr ) {
-										$formContent = $formContent."<option value='".$valuee."'>".$labelstr."</option>";
+										$formContent = $formContent."<option value='".$valuee."'".$defaultstr.">".$labelstr."</option>";
 									} else {
-										$formContent = $formContent."<option>".$valuee."</option>";
+										$formContent = $formContent."<option".$defaultstr.">".$valuee."</option>";
 									}
 
 									$v++;
