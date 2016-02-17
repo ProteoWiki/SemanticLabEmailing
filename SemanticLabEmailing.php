@@ -65,7 +65,7 @@ $GLOBALS['wgSemanticLabEmailingCreatePage'] = array(
 			"maxrevs" => 2,
 			"time" => 1296000, //Seconds to allow editing
 			"options" => array(
-				array( "name" => "General", "label" => array("Bad", "Good"), "value" => array(0, 1), "default" => "Good" )
+				array( "name" => "General", "label" => array("Bad", "Good"), "value" => array(0, 1), "default" => 0 )
 			)
 		)
 );
