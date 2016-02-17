@@ -18,7 +18,9 @@ class SpecialSemanticLabEmailingFeedback extends SpecialPage {
 
 		$request = $this->getRequest();
 
-		$output->addHTML( "<div class='semanticlabemailing_section'>" );
+		$output->addModules( 'ext.SemanticLabEmailingForm' );
+
+		$output->addHTML( "<div class='semanticlabemailing_form'>" );
 
 		$formContent = "";
 
@@ -30,13 +32,14 @@ class SpecialSemanticLabEmailingFeedback extends SpecialPage {
 			if ( $request->getCheck("values") ) {
 				// We get values
 				$values = $request->getVal("values");
-				// API process
+				// API process - trigger directly
+
 			} else {
 				if ( array_key_exists( $emailing, $wgSemanticLabEmailingCreatePage ) ) {
 					if ( array_key_exists( "options", $wgSemanticLabEmailingCreatePage[$emailing] ) ) {
 
 						// Fix method and action
-						$formContent = $formContent + "<form>";
+						$formContent = $formContent . "<form data-emailing='".$emailing."' data-target='".$target."'>";
 
 						$options = $wgSemanticLabEmailingCreatePage[$emailing]["options"];
 
@@ -87,7 +90,8 @@ class SpecialSemanticLabEmailingFeedback extends SpecialPage {
 							}
 						}
 
-						$formContent = $formContent + "</form>";
+						$formContent = $formContent . "<button>Submit</button>";
+						$formContent = $formContent . "</form>";
 					}
 				}
 			}

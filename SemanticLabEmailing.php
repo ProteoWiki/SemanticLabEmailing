@@ -70,6 +70,14 @@ $GLOBALS['wgSemanticLabEmailingCreatePage'] = array(
 		)
 );
 
+$GLOBALS['wgResourceModules']['ext.SemanticLabEmailingForm'] = array(
+	'localBasePath' => dirname( __FILE__ ),
+	'scripts' => array( 'js/specialForm.js' ),
+	'styles' => array('css/specialForm.css'),
+	'remoteExtPath' => 'SemanticLabEmailing'
+);
+
+
 // i18n
 $GLOBALS['wgMessagesDirs']['SemanticLabEmailing'] = __DIR__ . '/i18n';
 $GLOBALS['wgExtensionMessagesFiles']['SemanticLabEmailing'] = dirname( __FILE__ ) . '/SemanticLabEmailing.i18n.php';

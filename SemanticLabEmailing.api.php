@@ -25,7 +25,7 @@ class ApiSemanticLabEmailing extends ApiBase {
 			),
 			'method' => array(
 				ApiBase::PARAM_TYPE => 'string',
-				ApiBase::PARAM_REQUIRED => true
+				ApiBase::PARAM_REQUIRED => false
 			),
 			'target' => array(
 				ApiBase::PARAM_TYPE => 'string',

@@ -12,7 +12,7 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 class SemanticLabEmailingPageCreator {
 
 
-	public static function actOnPage( $emailing, $titleText, $method, $values="-1" ) {
+	public static function actOnPage( $emailing, $titleText, $method="update", $values="-1" ) {
 
 		global $wgSemanticLabEmailingCreatePage;
 
