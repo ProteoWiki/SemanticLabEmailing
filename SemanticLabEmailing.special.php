@@ -74,9 +74,9 @@ class SpecialSemanticLabEmailingFeedback extends SpecialPage {
 									}
 
 									if ( $labelstr ) {
-										$formContent = $formContent."<option value='".$value."'>".$labelstr."</option>";
+										$formContent = $formContent."<option value='".$valuee."'>".$labelstr."</option>";
 									} else {
-										$formContent = $formContent."<option>".$value."</option>";
+										$formContent = $formContent."<option>".$valuee."</option>";
 									}
 
 									$v++;
