@@ -20,6 +20,8 @@ class SpecialSemanticLabEmailingFeedback extends SpecialPage {
 
 		$output->addHTML( "<div class='semanticlabemailing_section'>" );
 
+		$formContent = "";
+
 		if ( $request->getCheck("emailing") && $request->getCheck("target") ) {
 			// Let's start talking
 			$emailing = $request->getVal("emailing");
@@ -32,6 +34,10 @@ class SpecialSemanticLabEmailingFeedback extends SpecialPage {
 			} else {
 				if ( array_key_exists( $emailing, $wgSemanticLabEmailingCreatePage ) ) {
 					if ( array_key_exists( "options", $wgSemanticLabEmailingCreatePage[$emailing] ) ) {
+
+						// Fix method and action
+						$formContent = $formContent + "<form>";
+
 						$options = $wgSemanticLabEmailingCreatePage[$emailing]["options"];
 
 						foreach ( $options as $option ) {
@@ -53,19 +59,41 @@ class SpecialSemanticLabEmailingFeedback extends SpecialPage {
 									}
 								}
 								
+								$formContent = $formContent."<label>".$name."</label>";
+								$formContent = $formContent."<select>";
+
+								$v = 0;
 								foreach ( $value as $valuee ) {
-									
+
+									$labelstr = null;
+									if ( defined( $label[$v] ) ) {
+										$labelstr = $label[$v];
+									}
+
+									if ( $labelstr ) {
+										$formContent = $formContent."<option value='".$value."'>".$labelstr."</option>";
+									} else {
+										$formContent = $formContent."<option>".$value."</option>";
+									}
+
+									$v++;
 
 								}
+
+								$formContent = $formContent."</select>";
+							} else {
+								// Handle input
+								// TODO: Pending case
 							}
 						}
 
+						$formContent = $formContent + "</form>";
 					}
 				}
-
 			}
 		}
 
+		$output->addHTML( $formContent );
 		$output->addHTML( "</div>" );
 
 		return true;
