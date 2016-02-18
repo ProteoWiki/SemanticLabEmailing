@@ -14,7 +14,7 @@
 		// Parse all default stuff as well
 		var valueArr = [];
 
-		var inputs = $(form).children( "input", "select" );
+		var inputs = $(form).children( "input, select" );
 		$(inputs).each(function( index ) {
 			valueArr.push( $( inputs[index] ).val() );
 		});
@@ -22,6 +22,7 @@
 		// Process API from this point
 
 		var params = {};
+		params.action = "semanticlabemailing";
 		params.emailing = emailing;
 		params.target = target;
 		params.method = "update";

@@ -6,6 +6,8 @@ if ( !defined( 'MEDIAWIKI' ) ) {
 	exit( 1 );
 }
 
+
+// TODO: A lot of msg to pass
 /**
  * This class handles the creation of pages.
  */
@@ -24,7 +26,11 @@ class SemanticLabEmailingPageCreator {
 		$templatePage = $wgSemanticLabEmailingCreatePage[$emailing]["template"];
 
 		//Final page
-		$pagename = $wgSemanticLabEmailingCreatePage[$emailing]["prefix"].":".$titleText;
+		if ( array_key_exists( "prefix", $wgSemanticLabEmailingCreatePage[$emailing] ) ) {
+			$pagename = $wgSemanticLabEmailingCreatePage[$emailing]["prefix"].":".$titleText;
+		} else {
+			$pagename = $titleText;
+		}
 
 		$maxrevs = $wgSemanticLabEmailingCreatePage[$emailing]["maxrevs"];
 
@@ -93,8 +99,8 @@ class SemanticLabEmailingPageCreator {
 
 		$article->doEditContent( $content, $edit_summary );
 
-		// Let's return page name
-		return $article->getTitle;
+		// Let's return something
+		return "Success!";
 
 	}
 
