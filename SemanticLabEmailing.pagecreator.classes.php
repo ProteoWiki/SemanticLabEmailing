@@ -115,7 +115,7 @@ class SemanticLabEmailingPageCreator {
 		foreach( $listValues as $value ) {
 			$iter++;
 			$subsVar = "#".$iter;
-			$templateEnd = str_replace( $subsVar, $value, $templateText );
+			$templateEnd = str_replace( $subsVar, $value, $templateEnd );
 		}
 
 		$templateEnd = str_replace("??", "{{", $templateEnd);
