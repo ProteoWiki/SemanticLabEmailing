@@ -54,13 +54,13 @@ class SemanticLabEmailingPageCreator {
 			$values = "-1";
 
 			if ( $pagenameWiki->exists() ) {
-				return 'Page already exists'; // Pagename exists -> abort
+				return wfMessage( 'semanticlabemailingfeedback-alreadyexists' )->text(); // Pagename exists -> abort
 			}
 
 		} else {
 
 			if ( ! $pagenameWiki->exists() ) {
-				return 'Page does not exist'; // Pagename does not exist -> abort
+				return wfMessage( 'semanticlabemailingfeedback-notexists' )->text(); // Pagename does not exist -> abort
 			}
 
 			// TODO: First check user -> associated
@@ -73,7 +73,7 @@ class SemanticLabEmailingPageCreator {
 	
 			// If num revs is lower than proceed
 			if ( $numrevs > $maxrevs ) {
-				return( "No more changes allowed" );
+				return wfMessage( 'semanticlabemailingfeedback-nomorechanges' )->text();
 			}
 
 			// If last rev is too old, block
@@ -81,7 +81,7 @@ class SemanticLabEmailingPageCreator {
 			$currentDate = date('YmdHis');
 
 			if ( $currentDate > ( $lastRevDate + $wgSemanticLabEmailingCreatePage[$emailing]["time"] ) ) {
-				return( "Too old rev" );
+				return wfMessage( 'semanticlabemailingfeedback-tooold' )->text();
 			}
 			
 		}
@@ -100,7 +100,7 @@ class SemanticLabEmailingPageCreator {
 		$article->doEditContent( $content, $edit_summary );
 
 		// Let's return something
-		return "Success!";
+		return wfMessage( 'semanticlabemailingfeedback-success' )->text();;
 
 	}
 
