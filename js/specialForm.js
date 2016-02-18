@@ -19,10 +19,33 @@
 			valueArr.push( $( inputs[index] ).val() );
 		});
 
-		console.log( valueArr.join("*") );
-
 		// Process API from this point
+
+		var params = {};
+		params.emailing = emailing;
+		params.target = target;
+		params.method = "update";
+		params.values = valueArr.join("*");
+		params.format = "json"; // Let's put JSON
 		
+		var posting = $.get( wgScriptPath + "/api.php", params );
+		posting.done(function( out ) {
+
+			if ( out && out.hasOwnProperty("semanticlabemailing")) {
+
+				if ( out["semanticlabemailing"].hasOwnProperty("status") ) {
+					var status = out["semanticlabemailing"]["status"];
+					$(".semanticlabemailing_form").empty();
+					$(".semanticlabemailing_form").append( "<p class='status'>" + status + "</p>" );
+
+				}
+			}
+
+		})
+		.fail( function( out ) {
+			console.log("Error!");
+		});
+
 	});
 
 }( jQuery, mediaWiki ) );
