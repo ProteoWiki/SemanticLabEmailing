@@ -520,8 +520,19 @@ class SemanticLabEmailingMailer {
 							$closure_date = $parts[1];  
 						}
 
+						// Including Satisfaction Link
+						global $wgServer;
+						global $wgArticlePath;
+						
+						// We hardcode type here, not necessarily
+						$feedback_path = "Special:SemanticLabEmailingFeedback?emailing=Satisfaction&target=".$title_text;
+						$pre_path = str_replace( "$1", $feedback_path, $wgArticlePath );
+
+						$feedback_link = $wgServer.$pre_path;
+
 						$subject = wfMessage( 'semanticlabemailing-user-request-closed-header', $wgSitename, $title_text, $username)->text();
-						$body = wfMessage( 'semanticlabemailing-user-request-closed', $username, $title_text, $link, $creator, $creatorlink, $creation_date, $closure_date)->text();
+
+						$body = wfMessage( 'semanticlabemailing-user-request-closed', $username, $title_text, $link, $creator, $creatorlink, $creation_date, $closure_date, $feedback_link)->text();
 
 					} elseif ( $status == CLOSED_TEAM ) {
 						$subject = wfMessage( 'semanticlabemailing-user-request-closed-header', $wgSitename, $title_text, $text)->text();
