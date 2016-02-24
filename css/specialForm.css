@@ -1,9 +1,9 @@
 /** CSS for form **/
 
 .semanticlabemailing_form label {
-	padding-right: 1em;
+	margin-right: 1em;
 }
 
 .semanticlabemailing_form button {
-	padding-left: 1em;
+	margin-left: 1em;
 }
