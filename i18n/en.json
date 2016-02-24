@@ -37,6 +37,7 @@
 	"semanticlabemailing-user-experiment-updated": "Dear $1,\nYour experiment $2 has been updated.\n\n$3\n\n$4 ($5)\n\nThe Proteomics Team\n",
 	"semanticlabemailing-user-verbose-check": "Note: If you would like to change the frequency of these email communications and reduce it to a single communication at the start and at the end of a request, please follow this link: $1",
 	"semanticlabemailingfeedback": "Feedback",
+	"semanticlabemailingfeedback-intro": "Dear user, please provide your feedback below for $1",
 	"semanticlabemailingfeedback-alreadyexists": "Page already exists",
 	"semanticlabemailingfeedback-notexists": "Page does not exist",
 	"semanticlabemailingfeedback-nomorechanges": "No more changes allowed",

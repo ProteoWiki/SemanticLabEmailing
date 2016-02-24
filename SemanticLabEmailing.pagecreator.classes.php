@@ -100,7 +100,7 @@ class SemanticLabEmailingPageCreator {
 		$article->doEditContent( $content, $edit_summary );
 
 		// Let's return something
-		return wfMessage( 'semanticlabemailingfeedback-success' )->text();;
+		return wfMessage( 'semanticlabemailingfeedback-success' )->text();
 
 	}
 

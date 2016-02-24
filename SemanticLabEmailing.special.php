@@ -20,6 +20,19 @@ class SpecialSemanticLabEmailingFeedback extends SpecialPage {
 
 		$output->addModules( 'ext.SemanticLabEmailingForm' );
 
+		$targetURL = "";
+		if ( $request->getCheck("target") ) {
+			global $wgServer;
+			global $wgArticlePath;
+			
+			$targetPage = $request->getVal("target");
+
+			$targetURL = $wgServer.str_replace( "$1", $targetPage, $wgArticlePath );
+
+		}
+
+		$output->addHTML( "<div class='semanticlabemailing_feedback'>".wfMessage( 'semanticlabemailingfeedback-intro' )->params( $targetURL )->plain()."</div>" );
+
 		$output->addHTML( "<div class='semanticlabemailing_form'>" );
 
 		$formContent = "";
