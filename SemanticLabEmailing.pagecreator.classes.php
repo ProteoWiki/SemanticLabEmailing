@@ -77,10 +77,10 @@ class SemanticLabEmailingPageCreator {
 			}
 
 			// If last rev is too old, block
-			$lastRevDate = $revs[0]["r.rev_timestamp"];
-			$currentDate = date('YmdHis');
+			$lastRevDate = wfTimestamp( TS_UNIX, $revs[0]["r.rev_timestamp"] );
+			$currentDate = time();
 
-			if ( $currentDate > ( $lastRevDate + $wgSemanticLabEmailingCreatePage[$emailing]["time"] ) ) {
+			if ( $currentDate  > ( $lastRevDate +  $wgSemanticLabEmailingCreatePage[$emailing]["time"] ) ) {
 				return wfMessage( 'semanticlabemailingfeedback-tooold' )->text();
 			}
 			
