@@ -439,7 +439,7 @@ class SemanticLabEmailingMailer {
 	/**
 	 * Sends mail notifications
 	 */
-	function mailNotification( $assignees, $text, $title, $user_list, $status, $extra="" ) {
+	private static function mailNotification( $assignees, $text, $title, $user_list, $status, $extra="" ) {
 		global $wgSitename;
 		global $wgServer;
 		global $wgScript;
@@ -567,7 +567,10 @@ class SemanticLabEmailingMailer {
 						
 						$request = $extra;
 						$requestobj = Title::newFromText($request);
-						$requestlink = $requestobj->escapeFullURL();
+						
+						if ( $requestobj ) {
+							$requestlink = $requestobj->escapeFullURL();
+						}
 					   
 						$subject = wfMessage( 'semanticlabemailing-user-experiment-new-header', $wgSitename, $title_text)->text();
 						$body = wfMessage( 'semanticlabemailing-user-experiment-new', $username, $title_text, $request, $requestlink)->text();
@@ -581,7 +584,10 @@ class SemanticLabEmailingMailer {
 						
 						$request = $extra;
 						$requestobj = Title::newFromText($request);
-						$requestlink = $requestobj->escapeFullURL();
+						
+						if ( $requestobj ) {
+							$requestlink = $requestobj->escapeFullURL();
+						}
 						
 						$subject = wfMessage( 'semanticlabemailing-user-experiment-closed-header', $wgSitename, $title_text)->text();
 						$body = wfMessage( 'semanticlabemailing-user-experiment-closed', $username, $title_text, $request, $requestlink )->text();
@@ -599,7 +605,10 @@ class SemanticLabEmailingMailer {
 							$partextra = explode("*", $extra);
 							$request = $partextra[0];
 							$requestobj = Title::newFromText($request);
-							$requestlink = $requestobj->escapeFullURL();
+					
+							if ( $requestobj ) {
+								$requestlink = $requestobj->escapeFullURL();
+							}		
 
 							$process = explode(";", $partextra[1]);
 							
