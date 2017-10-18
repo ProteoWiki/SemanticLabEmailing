@@ -59,8 +59,8 @@ class SemanticLabEmailingMailer {
 			global $wgSemanticLabEmailingExtensionProp;
 
 			// We assume only one prop for Request
-			$status = self::getStatus( $wgSemanticLabEmailingPropsCheck['Request'][0], $title_text, $user );
-			$week = self::getStatus( $wgSemanticLabEmailingExtensionProp, $title_text, $user );
+			$status = self::getStatus( $wgSemanticLabEmailingPropsCheck['Request'][0], $title_text );
+			$week = self::getStatus( $wgSemanticLabEmailingExtensionProp, $title_text );
 			
 			if ( count( $status ) > 0 ) {
 				self::$request_status = $status[0];
@@ -77,7 +77,7 @@ class SemanticLabEmailingMailer {
 
 			// Assigned to
 			global $wgSemanticLabEmailingAssignedProp;
-			$assignees = self::getAssignees( $wgSemanticLabEmailingAssignedProp['Request'], $title_text, $user );
+			$assignees = self::getAssignees( $wgSemanticLabEmailingAssignedProp['Request'], $title_text );
 
 			if ( count( $assignees ) > 0 ) {
 					self::$request_assignees = $assignees;
@@ -96,7 +96,7 @@ class SemanticLabEmailingMailer {
 			
 				$prop2Check = str_replace( " ", "_", $prop2Check );
 				// Status of the request
-				$status = self::getStatus( $prop2Check, $title_text, $user );
+				$status = self::getStatus( $prop2Check, $title_text );
 				
 				if ( count( $status ) > 0 ) {
 					self::$experiment_status[$prop2Check] = $status[0];
@@ -115,9 +115,20 @@ class SemanticLabEmailingMailer {
 		global $wgCanonicalNamespaceNames;
 		
 		// TODO: Retrieve article
+		$smwArticle = $diff->getSubject();
+		$title = $smwArticle->getTitle();
+		if ( $title ) {
+			$article = Article::newFromTitle ( $title );
+			$revision = $article->getRevision(); 	
+			
+			// TODO: We can get user from here if necessary
+			
+			$minor = $revision->isMinor();
+			
+			// TODO: Guess if first revision, so flag
+			
+		}
 		
-		// TODO: Retrieve user
-
 		return true;
 	
 
@@ -143,10 +154,10 @@ class SemanticLabEmailingMailer {
 			if ( $wgCanonicalNamespaceNames[$ns] == 'Request' ) {
 		
 				if ( $status == NEW_REQUEST ) {
-					self::mailNewRequest( $article, $current_user, $status );
+					self::mailNewRequest( $article, $status );
 				}
 				if ( $status == UPDATE ) {
-					self::mailEditRequest( $article, $current_user, $status );
+					self::mailEditRequest( $article, $status );
 				}
 			}
 
@@ -156,12 +167,12 @@ class SemanticLabEmailingMailer {
 			 if ( $status == NEW_REQUEST ) {
 				// Change status
 				$status = NEW_EXPERIMENT;
-				self::mailNewExperiment( $article, $current_user, $status );
+				self::mailNewExperiment( $article, $status );
 			 }
 			 if ( $status == UPDATE ) {
 				// Change status
 				$status = UPDATE_EXPERIMENT;
-				self::mailEditExperiment( $article, $current_user, $status );
+				self::mailEditExperiment( $article, $status );
 			 }
 			
 			}
@@ -175,7 +186,7 @@ class SemanticLabEmailingMailer {
 	static function getUserParam( $param, $user ) {
 		
 		$userpage = $user->getUserPage();
-		$status = self::getStatus( $param, $userpage->getFullText(), $user );
+		$status = self::getStatus( $param, $userpage->getFullText() );
 		
 		return $status[0];
 	}
@@ -199,14 +210,14 @@ class SemanticLabEmailingMailer {
 	
 	
 	// Function for Requesters
-	static function mailNewRequest( $article, $user, $status ) {
+	static function mailNewRequest( $article, $status ) {
 
 		$title = $article->getTitle();
 		$title_text = $title->getPrefixedText();
 		self::printDebug( "Title text: $title_text" );
 
 		global $wgSemanticLabEmailingOwnerProp;
-		$requesters = self::getAssignees( $wgSemanticLabEmailingOwnerProp['Request'], $title_text, $user );
+		$requesters = self::getAssignees( $wgSemanticLabEmailingOwnerProp['Request'], $title_text );
 
 		// Get supermanager email addresses
 		$listusers = self::listUsersGroup("supermanager");
@@ -217,7 +228,7 @@ class SemanticLabEmailingMailer {
 	}
 	
 	// Function for Experiments
-	static function mailNewExperiment( $article, $user, $status ) {
+	static function mailNewExperiment( $article, $status ) {
 
 		$title = $article->getTitle();
 		$title_text = $title->getPrefixedText();
@@ -225,12 +236,12 @@ class SemanticLabEmailingMailer {
 		
 		// Get associated request
 		global $wgSemanticLabEmailingReferenceProp;
-		$title_request = self::getAssignees( $wgSemanticLabEmailingReferenceProp['Experiment'], $title_text, $user );
+		$title_request = self::getAssignees( $wgSemanticLabEmailingReferenceProp['Experiment'], $title_text );
 		
 		// Get requesters
 	    // we expect only one request to match experiment -> array
 		global $wgSemanticLabEmailingOwnerProp;
-		$requesters = self::getAssignees( $wgSemanticLabEmailingOwnerProp['Request'], "Request:".$title_request[0], $user );
+		$requesters = self::getAssignees( $wgSemanticLabEmailingOwnerProp['Request'], "Request:".$title_request[0] );
 		
 		self::mailNotification( $requesters, "New", $title, '', $status, "Request:".$title_request[0] );
 
@@ -239,7 +250,7 @@ class SemanticLabEmailingMailer {
 	
 	
 	// Function for Requests edits
-	static function mailEditRequest( $article, $user, $status ) {
+	static function mailEditRequest( $article, $status ) {
 
 		$title = $article->getTitle();
 		$title_text = $title->getPrefixedText();
@@ -251,12 +262,12 @@ class SemanticLabEmailingMailer {
 		array_push($from_user, $username);	
 
 		global $wgSemanticLabEmailingOwnerProp;
-		$requesters = self::getAssignees( $wgSemanticLabEmailingOwnerProp['Request'], $title_text, $user );
+		$requesters = self::getAssignees( $wgSemanticLabEmailingOwnerProp['Request'], $title_text );
 		// We put current assignes
 		$text = $requesters[0];
 
 		global $wgSemanticLabEmailingPropsCheck;
-		$present_status = self::getStatus( $wgSemanticLabEmailingPropsCheck['Request'][0], $title_text, $user );
+		$present_status = self::getStatus( $wgSemanticLabEmailingPropsCheck['Request'][0], $title_text );
 
 		if ( $present_status[0] != self::$request_status ) {
 			
@@ -265,7 +276,7 @@ class SemanticLabEmailingMailer {
 
 				// Let's check Extension time
 				global $wgSemanticLabEmailingDeliveryTimeProp;
-				$week = self::getStatus( $wgSemanticLabEmailingDeliveryTimeProp, $title_text, $user );
+				$week = self::getStatus( $wgSemanticLabEmailingDeliveryTimeProp, $title_text );
 
 				$extra = $week[0];
 				
@@ -281,8 +292,8 @@ class SemanticLabEmailingMailer {
 				$status = CLOSED;
 
 				global $wgSemanticLabEmailingClosureProp;
-				$creation_date = self::getStatus( '_CDAT', $title_text, $user );
-				$closure_date = self::getStatus( $wgSemanticLabEmailingClosureProp, $title_text, $user );
+				$creation_date = self::getStatus( '_CDAT', $title_text );
+				$closure_date = self::getStatus( $wgSemanticLabEmailingClosureProp, $title_text );
 	
 				$extra = $creation_date[0]."@".$closure_date[0];
 
@@ -317,7 +328,7 @@ class SemanticLabEmailingMailer {
 
 		}
 
-		$present_assignees = self::getAssignees( 'PR_Request_AssignedTo', $title_text, $user );
+		$present_assignees = self::getAssignees( 'PR_Request_AssignedTo', $title_text );
 	
 		if ($present_assignees != self::$request_assignees) {
 
@@ -328,7 +339,7 @@ class SemanticLabEmailingMailer {
 	}
 
 	   // Function for Experiment edits
-	static function mailEditExperiment( $article, $user, $status ) {
+	static function mailEditExperiment( $article, $status ) {
 
 		$title = $article->getTitle();
 		$title_text = $title->getPrefixedText();
@@ -336,12 +347,12 @@ class SemanticLabEmailingMailer {
 		
 		// Get associated request
 		global $wgSemanticLabEmailingReferenceProp;
-		$title_request = self::getAssignees( $wgSemanticLabEmailingReferenceProp['Experiment'], $title_text, $user );
+		$title_request = self::getAssignees( $wgSemanticLabEmailingReferenceProp['Experiment'], $title_text );
 	  
 		// Get requesters
 		// we expect only one request to match experiment -> array
 		global $wgSemanticLabEmailingOwnerProp;
-		$requesters = self::getAssignees( $wgSemanticLabEmailingOwnerProp['Request'], "Request:".$title_request[0], $user );
+		$requesters = self::getAssignees( $wgSemanticLabEmailingOwnerProp['Request'], "Request:".$title_request[0] );
 	  
 		// Time to get all properties
 		global $wgSemanticLabEmailingPropsCheck;
@@ -356,7 +367,7 @@ class SemanticLabEmailingMailer {
 		
 			$prop2Check = str_replace( " ", "_", $prop2Check );
 			// Status of the request
-			$propstatus = self::getStatus( $prop2Check, $title_text, $user );
+			$propstatus = self::getStatus( $prop2Check, $title_text );
 			
 			if ( count( $propstatus ) > 0 ) {
 				if ( self::$experiment_status[$prop2Check] != $propstatus[0] ) {
@@ -389,7 +400,7 @@ class SemanticLabEmailingMailer {
 	 * Returns an array of properties based on $query_word
 	 * @param $query_word String: the property that designate the users to notify.
 	 */
-	static function getAssignees( $query_word, $title_text, $user ) {
+	static function getAssignees( $query_word, $title_text ) {
 		// Array of assignees to return
 		$assignee_arr = array();
 
@@ -422,7 +433,7 @@ class SemanticLabEmailingMailer {
 	 * Returns an array of properties based on $query_word
 	 * @param $query_word String: the property that designate the users to notify.
 	 */
-	static function getStatus( $query_word, $title_text, $user ) {
+	static function getStatus( $query_word, $title_text ) {
 		// Array of assignees to return
 		$assignee_arr = array();
 
