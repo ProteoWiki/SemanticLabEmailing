@@ -143,10 +143,10 @@ class SemanticLabEmailingMailer {
 			if ( $wgCanonicalNamespaceNames[$ns] == 'Request' ) {
 		
 				if ( $status == NEW_REQUEST ) {
-					self::mailNewRequest( $article, $text, $current_user, $status );
+					self::mailNewRequest( $article, $current_user, $status );
 				}
 				if ( $status == UPDATE ) {
-					self::mailEditRequest( $article, $text, $current_user, $status );
+					self::mailEditRequest( $article, $current_user, $status );
 				}
 			}
 
@@ -156,12 +156,12 @@ class SemanticLabEmailingMailer {
 			 if ( $status == NEW_REQUEST ) {
 				// Change status
 				$status = NEW_EXPERIMENT;
-				self::mailNewExperiment( $article, $text, $current_user, $status );
+				self::mailNewExperiment( $article, $current_user, $status );
 			 }
 			 if ( $status == UPDATE ) {
 				// Change status
 				$status = UPDATE_EXPERIMENT;
-				self::mailEditExperiment( $article, $text, $current_user, $status );
+				self::mailEditExperiment( $article, $current_user, $status );
 			 }
 			
 			}
@@ -199,7 +199,7 @@ class SemanticLabEmailingMailer {
 	
 	
 	// Function for Requesters
-	static function mailNewRequest( $article, $text, $user, $status ) {
+	static function mailNewRequest( $article, $user, $status ) {
 
 		$title = $article->getTitle();
 		$title_text = $title->getPrefixedText();
@@ -217,7 +217,7 @@ class SemanticLabEmailingMailer {
 	}
 	
 	// Function for Experiments
-	static function mailNewExperiment( $article, $text, $user, $status ) {
+	static function mailNewExperiment( $article, $user, $status ) {
 
 		$title = $article->getTitle();
 		$title_text = $title->getPrefixedText();
@@ -239,7 +239,7 @@ class SemanticLabEmailingMailer {
 	
 	
 	// Function for Requests edits
-	static function mailEditRequest( $article, $text, $user, $status ) {
+	static function mailEditRequest( $article, $user, $status ) {
 
 		$title = $article->getTitle();
 		$title_text = $title->getPrefixedText();
@@ -328,7 +328,7 @@ class SemanticLabEmailingMailer {
 	}
 
 	   // Function for Experiment edits
-	static function mailEditExperiment( $article, $text, $user, $status ) {
+	static function mailEditExperiment( $article, $user, $status ) {
 
 		$title = $article->getTitle();
 		$title_text = $title->getPrefixedText();
