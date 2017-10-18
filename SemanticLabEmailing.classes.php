@@ -107,6 +107,21 @@ class SemanticLabEmailingMailer {
 
 		return true;
 	}
+	
+	/** Function for acting after data update process. Replaces previous on save complete **/
+	
+	public static function afterDataUpdate( $store, $data, $diff ) {
+		
+		global $wgCanonicalNamespaceNames;
+		
+		// TODO: Retrieve article
+		
+		// TODO: Retrieve user
+
+		return true;
+	
+
+	}
 
 	public static function mailUpdatedTask( $article, $current_user, $text, $summary, $minoredit, $watchthis, $sectionanchor, $flags, $revision ) {
 		

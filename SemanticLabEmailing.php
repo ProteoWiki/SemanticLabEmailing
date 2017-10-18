@@ -21,7 +21,7 @@ $GLOBALS['wgExtensionCredits'][defined( 'SEMANTIC_EXTENSION_TYPE' ) ? 'semantic'
 		'Ryan Lane',
 		'[http://www.mediawiki.org/wiki/User:Jeroen_De_Dauw Jeroen De Dauw]'
 	),
-	'version' => '1.6',
+	'version' => '1.7.0',
 	'url' => 'http://www.mediawiki.',
 	'descriptionmsg' => 'semanticlabemailing-desc',
 );
@@ -89,8 +89,9 @@ $GLOBALS['wgAutoloadClasses']['ApiSemanticLabEmailing'] = __DIR__ . '/SemanticLa
 
 
 // Hooks
-$GLOBALS['wgHooks']['ArticleSaveComplete'][] = 'SemanticLabEmailingMailer::mailUpdatedTask';
-$GLOBALS['wgHooks']['ArticleSave'][] = 'SemanticLabEmailingMailer::findOldValues';
+$GLOBALS['wgHooks']['PageContentSaveComplete'][] = 'SemanticLabEmailingMailer::mailUpdatedTask';
+$GLOBALS['wgHooks']['PageContentSave'][] = 'SemanticLabEmailingMailer::findOldValues';
+$GLOBALS['wgHooks']['SMW::SQLStore::AfterDataUpdateComplete'][] = 'SemanticLabEmailingMailer::afterDataUpdate';
 
 $GLOBALS['wgAPIModules']['semanticlabemailing'] = 'ApiSemanticLabEmailing';
 
