@@ -89,7 +89,7 @@ $GLOBALS['wgAutoloadClasses']['ApiSemanticLabEmailing'] = __DIR__ . '/SemanticLa
 
 
 // Hooks
-$GLOBALS['wgHooks']['PageContentSaveComplete'][] = 'SemanticLabEmailingMailer::mailUpdatedTask';
+# $GLOBALS['wgHooks']['PageContentSaveComplete'][] = 'SemanticLabEmailingMailer::mailUpdatedTask';
 $GLOBALS['wgHooks']['PageContentSave'][] = 'SemanticLabEmailingMailer::findOldValues';
 $GLOBALS['wgHooks']['SMW::SQLStore::AfterDataUpdateComplete'][] = 'SemanticLabEmailingMailer::afterDataUpdate';
 

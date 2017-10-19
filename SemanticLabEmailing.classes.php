@@ -117,8 +117,10 @@ class SemanticLabEmailingMailer {
 		// TODO: Retrieve article
 		$smwArticle = $diff->getSubject();
 		$title = $smwArticle->getTitle();
+		$ns = $smwArticle->getNamespace();
+		
 		if ( $title ) {
-			$article = Article::newFromTitle ( $title );
+			$article = WikiPage::factory( $title );
 			
 			// Last revision
 			$revision = $article->getRevision();
@@ -129,42 +131,43 @@ class SemanticLabEmailingMailer {
 			
 			$minoredit = $revision->isMinor();
 			
-			// Default UPDATE, otherwise is a new page
-			$status = UPDATE;
-			if ( $revision->getId() != $oldrevision->getId() ) {
-				$status = NEW_REQUEST;
-			}
+			if ( ! $minoredit ) {
 			
-			// We will process as well depending on Namespace: Request and Experiment
-			$ns = $article->getTitle()->getNamespace();
-
-			self::printDebug( $ns );
-
-			if ( $wgCanonicalNamespaceNames[$ns] == 'Request' ) {
-		
-				if ( $status == NEW_REQUEST ) {
-					self::mailNewRequest( $article, $status );
+				// Default UPDATE, otherwise is a new page
+				$status = UPDATE;
+				if ( $revision->getId() == $oldrevision->getId() ) {
+					$status = NEW_REQUEST;
 				}
-				if ( $status == UPDATE ) {
-					self::mailEditRequest( $article, $status );
+				
+				// We will process as well depending on Namespace: Request and Experiment
+	
+				if ( $wgCanonicalNamespaceNames[$ns] == 'Request' ) {
+			
+					if ( $status == NEW_REQUEST ) {
+						self::mailNewRequest( $article, $status );
+					}
+					if ( $status == UPDATE ) {
+						self::mailEditRequest( $article, $status );
+					}
 				}
+	
+				if ( $wgCanonicalNamespaceNames[$ns] == 'Experiment' ) {
+				
+				
+				 if ( $status == NEW_REQUEST ) {
+					// Change status
+					$status = NEW_EXPERIMENT;
+					self::mailNewExperiment( $article, $status );
+				 }
+				 if ( $status == UPDATE ) {
+					// Change status
+					$status = UPDATE_EXPERIMENT;
+					self::mailEditExperiment( $article, $status );
+				 }
+				
+				}
+			
 			}
-
-			if ( $wgCanonicalNamespaceNames[$ns] == 'Experiment' ) {
-			
-			
-			 if ( $status == NEW_REQUEST ) {
-				// Change status
-				$status = NEW_EXPERIMENT;
-				self::mailNewExperiment( $article, $status );
-			 }
-			 if ( $status == UPDATE ) {
-				// Change status
-				$status = UPDATE_EXPERIMENT;
-				self::mailEditExperiment( $article, $status );
-			 }
-			
-			}	
 			
 		}
 		
