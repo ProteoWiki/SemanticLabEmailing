@@ -119,13 +119,52 @@ class SemanticLabEmailingMailer {
 		$title = $smwArticle->getTitle();
 		if ( $title ) {
 			$article = Article::newFromTitle ( $title );
-			$revision = $article->getRevision(); 	
 			
+			// Last revision
+			$revision = $article->getRevision();
 			// TODO: We can get user from here if necessary
+
+			// Oldest revision
+			$oldrevision = $article->getOldestRevision();
 			
-			$minor = $revision->isMinor();
+			$minoredit = $revision->isMinor();
 			
-			// TODO: Guess if first revision, so flag
+			// Default UPDATE, otherwise is a new page
+			$status = UPDATE;
+			if ( $revision->getId() != $oldrevision->getId() ) {
+				$status = NEW_REQUEST;
+			}
+			
+			// We will process as well depending on Namespace: Request and Experiment
+			$ns = $article->getTitle()->getNamespace();
+
+			self::printDebug( $ns );
+
+			if ( $wgCanonicalNamespaceNames[$ns] == 'Request' ) {
+		
+				if ( $status == NEW_REQUEST ) {
+					self::mailNewRequest( $article, $status );
+				}
+				if ( $status == UPDATE ) {
+					self::mailEditRequest( $article, $status );
+				}
+			}
+
+			if ( $wgCanonicalNamespaceNames[$ns] == 'Experiment' ) {
+			
+			
+			 if ( $status == NEW_REQUEST ) {
+				// Change status
+				$status = NEW_EXPERIMENT;
+				self::mailNewExperiment( $article, $status );
+			 }
+			 if ( $status == UPDATE ) {
+				// Change status
+				$status = UPDATE_EXPERIMENT;
+				self::mailEditExperiment( $article, $status );
+			 }
+			
+			}	
 			
 		}
 		
