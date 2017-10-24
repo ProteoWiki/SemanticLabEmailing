@@ -22,7 +22,7 @@ $GLOBALS['wgExtensionCredits'][defined( 'SEMANTIC_EXTENSION_TYPE' ) ? 'semantic'
 		'[http://www.mediawiki.org/wiki/User:Jeroen_De_Dauw Jeroen De Dauw]'
 	),
 	'version' => '1.7.0',
-	'url' => 'http://www.mediawiki.',
+	'url' => 'https://github.com/ProteoWiki',
 	'descriptionmsg' => 'semanticlabemailing-desc',
 );
 
