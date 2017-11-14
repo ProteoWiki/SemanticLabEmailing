@@ -546,8 +546,11 @@ class SemanticLabEmailingMailer {
 					}
 
 					$userobj = User::newfromName($user);
-					$creator = $userobj->getRealName();
-					$creatorlink = $userobj->getUserPage()->escapeFullURL();
+					
+					if ( $userobj ) {
+						$creator = $userobj->getRealName();
+						$creatorlink = $userobj->getUserPage()->escapeFullURL();
+					}
 					array_push($from_addresses, new MailAddress( $userobj->getEmail(), $userobj->getName() ));
 				}
 			}
