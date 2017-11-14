@@ -114,12 +114,16 @@ class SemanticLabEmailingMailer {
 		
 		global $wgCanonicalNamespaceNames;
 		
-		// TODO: Retrieve article
 		$smwArticle = $diff->getSubject();
 		$title = $smwArticle->getTitle();
 		$ns = $smwArticle->getNamespace();
-		
+
 		if ( $title ) {
+
+			// Clean # Query part
+			$title_text = self::cleanTitleText( $title->getPrefixedText() );
+			$title = Title::newFromText( $title_text ); 
+		
 			$article = WikiPage::factory( $title );
 			
 			// Last revision
@@ -707,6 +711,25 @@ class SemanticLabEmailingMailer {
 
 				}
 			}
+	}
+	
+	/**
+	* Function to clean #XXX part of URL text
+	* @param $title_text
+	* @return clean title_text
+	*
+	*/
+	private static function cleanTitleText( $title_text ) {
+		
+		# We assume that # is not an acceptable character
+		$parts = explode( "#", $title_text );
+		
+		if ( count( $parts ) > 1 ) {
+			
+			$title_text = $parts[0];
+		}
+		
+		return $title_text;
 	}
 
 	/**
