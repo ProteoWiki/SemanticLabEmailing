@@ -555,6 +555,9 @@ class SemanticLabEmailingMailer {
 				}
 			}
 
+			// Let's ensure mails are unique
+			$assignees = array_unique( $assignees );
+			
 			// Get to adddresses, can be many
 			foreach ($assignees as $assignee) {
 			
