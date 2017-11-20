@@ -133,9 +133,14 @@ class SemanticLabEmailingMailer {
 			// Oldest revision
 			$oldrevision = $article->getOldestRevision();
 			
-			$minoredit = $revision->isMinor();
+			// Minor edit handling
+			$minoredit = false;
 			
-			if ( ! $minoredit ) {
+			if ( $revision ) {
+				$minoredit = $revision->isMinor();
+			}
+			
+			if ( ! $minoredit && $revision ) {
 			
 				// Default UPDATE, otherwise is a new page
 				$status = UPDATE;
