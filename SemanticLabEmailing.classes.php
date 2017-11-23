@@ -114,6 +114,8 @@ class SemanticLabEmailingMailer {
 		
 		global $wgCanonicalNamespaceNames;
 		
+		$currentTS = wfTimestampNow(); // Current TS
+		
 		$smwArticle = $diff->getSubject();
 		$title = $smwArticle->getTitle();
 		$ns = $smwArticle->getNamespace();
@@ -128,8 +130,7 @@ class SemanticLabEmailingMailer {
 			
 			// Last revision
 			$revision = $article->getRevision();
-			// TODO: We can get user from here if necessary
-
+			
 			// Oldest revision
 			$oldrevision = $article->getOldestRevision();
 			
@@ -142,37 +143,46 @@ class SemanticLabEmailingMailer {
 			
 			if ( ! $minoredit && $revision ) {
 			
-				// Default UPDATE, otherwise is a new page
-				$status = UPDATE;
-				if ( $revision->getId() == $oldrevision->getId() ) {
-					$status = NEW_REQUEST;
-				}
+				// Revision info
+				$revisionUserId = $revision->getUser( Revision::RAW ); 
+				$revisionTS = $revision->getTimestamp();
+
+				// If the same timestamp, go ahead ... here we could play with a margin
+				if ( $currentTS == $revisionTS ) {
 				
-				// We will process as well depending on Namespace: Request and Experiment
-	
-				if ( $wgCanonicalNamespaceNames[$ns] == 'Request' ) {
-			
-					if ( $status == NEW_REQUEST ) {
-						self::mailNewRequest( $article, $status );
+					// Default UPDATE, otherwise is a new page
+					$status = UPDATE;
+					if ( $revision->getId() == $oldrevision->getId() ) {
+						$status = NEW_REQUEST;
 					}
-					if ( $status == UPDATE ) {
-						self::mailEditRequest( $article, $status );
+					
+					// We will process as well depending on Namespace: Request and Experiment
+		
+					if ( $wgCanonicalNamespaceNames[$ns] == 'Request' ) {
+				
+						if ( $status == NEW_REQUEST ) {
+							self::mailNewRequest( $article, $status );
+						}
+						if ( $status == UPDATE ) {
+							self::mailEditRequest( $article, $status );
+						}
 					}
-				}
-	
-				if ( $wgCanonicalNamespaceNames[$ns] == 'Experiment' ) {
-				
-				
-				 if ( $status == NEW_REQUEST ) {
-					// Change status
-					$status = NEW_EXPERIMENT;
-					self::mailNewExperiment( $article, $status );
-				 }
-				 if ( $status == UPDATE ) {
-					// Change status
-					$status = UPDATE_EXPERIMENT;
-					self::mailEditExperiment( $article, $status );
-				 }
+		
+					if ( $wgCanonicalNamespaceNames[$ns] == 'Experiment' ) {
+					
+					
+					 if ( $status == NEW_REQUEST ) {
+						// Change status
+						$status = NEW_EXPERIMENT;
+						self::mailNewExperiment( $article, $status );
+					 }
+					 if ( $status == UPDATE ) {
+						// Change status
+						$status = UPDATE_EXPERIMENT;
+						self::mailEditExperiment( $article, $status );
+					 }
+					
+					}
 				
 				}
 			
